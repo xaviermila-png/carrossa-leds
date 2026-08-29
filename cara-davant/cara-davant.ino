@@ -9,8 +9,11 @@
   tenia diversos bugs — vegeu el README).
 
   Confirmat per l'usuari: les 8 plomes van totes SEGUIDES (sense cap LED
-  apagat entre mig), en el mateix ordre que la llista de colors més avall,
-  i el sketch de la cara de darrere és idèntic a aquest.
+  apagat entre mig), en el mateix ordre que la llista de colors més avall.
+  El sketch de la cara de darrere parteix del mateix disseny, però és un
+  fitxer independent — les dues cares NO es donen per simètriques (poden
+  tenir un nombre de LEDs per ploma diferent), així que cadascuna té el
+  seu propi PLOMA_LEDS[] i es pot ajustar sense afectar l'altra.
 
   *** ÚNIC VALOR PENDENT DE CONFIRMAR: PLOMA_LEDS més avall ***
   No es coneix encara el nombre exacte de LEDs de cada ploma — de moment
