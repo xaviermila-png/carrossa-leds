@@ -16,14 +16,14 @@
   d'aquests valors i els bugs que corregeix respecte al programa
   original a ../reference/).
 
-  *** ÚNIC VALOR PENDENT DE CONFIRMAR: PLOMA_LEDS més avall ***
+  *** ÚNIC VALOR PENDENT DE CONFIRMAR: PLOMA_LEDS_DAVANT/DARRERE més avall ***
   No es coneix encara el nombre exacte de LEDs de cada ploma — de moment
-  totes 9 (placeholder). Per ajustar-ho: puja el programa, mira on cau
-  realment el tall entre cada color a la tira física, i corregeix els 8
-  números de PLOMA_LEDS[] (poden ser diferents entre plomes; si les dues
-  cares acaben tenint mides diferents, caldrà un PLOMA_LEDS propi per
-  cadascuna — de moment se'n comparteix un de sol perquè estan confirmades
-  idèntiques).
+  totes 9 (placeholder). Les dues cares NO es donen per simètriques, així
+  que cadascuna té el seu propi array — ajustar-ne un no afecta l'altre.
+  Per ajustar-ho: puja el programa, mira on cau realment el tall entre
+  cada color a la tira física, i corregeix els 8 números corresponents
+  (poden ser diferents entre plomes, i entre cares) fins que cada tall
+  caigui just al final de la ploma corresponent.
 */
 
 #include <Adafruit_NeoPixel.h>
@@ -57,20 +57,23 @@ const uint32_t PLOMA_COLOR[NUM_PLOMES] = {
     COLOR_VERD, COLOR_BLAU_CLAR, COLOR_BLAU_FOSC, COLOR_INDI,
 };
 
-// PLACEHOLDER — vegeu la nota de capçalera del fitxer. Compartit per les
-// dues cares mentre estiguin confirmades idèntiques.
-const uint16_t PLOMA_LEDS[NUM_PLOMES] = {9, 9, 9, 9, 9, 9, 9, 9};
+// PLACEHOLDER — vegeu la nota de capçalera del fitxer. Un array propi per
+// cara: no es dona per fet que les dues siguin simètriques.
+const uint16_t PLOMA_LEDS_DAVANT[NUM_PLOMES] = {9, 9, 9, 9, 9, 9, 9, 9};
+const uint16_t PLOMA_LEDS_DARRERE[NUM_PLOMES] = {9, 9, 9, 9, 9, 9, 9, 9};
 
-// Encén les 8 plomes (seguides, sense buit) sobre la tira indicada —
-// compartit per les dues cares perquè el patró és idèntic, només canvia
-// quin objecte Adafruit_NeoPixel (i per tant quin pin) rep les ordres.
-void encendrePlomes(Adafruit_NeoPixel &tira) {
+// Encén les 8 plomes (seguides, sense buit) sobre la tira indicada, amb
+// els comptatges de LEDs propis d'aquesta cara — compartit entre les
+// dues cares perquè el PATRÓ (colors i lògica) és idèntic, només canvien
+// quin objecte Adafruit_NeoPixel (i per tant quin pin) rep les ordres i
+// quants LEDs té cada ploma.
+void encendrePlomes(Adafruit_NeoPixel &tira, const uint16_t plomaLeds[NUM_PLOMES]) {
   tira.begin();
   tira.clear();
 
   uint16_t idx = 0;
   for (uint8_t p = 0; p < NUM_PLOMES; p++) {
-    for (uint16_t n = 0; n < PLOMA_LEDS[p]; n++) {
+    for (uint16_t n = 0; n < plomaLeds[p]; n++) {
       tira.setPixelColor(idx, PLOMA_COLOR[p]);
       idx++;
     }
@@ -79,8 +82,8 @@ void encendrePlomes(Adafruit_NeoPixel &tira) {
 }
 
 void setup() {
-  encendrePlomes(tiraDavant);
-  encendrePlomes(tiraDarrere);
+  encendrePlomes(tiraDavant, PLOMA_LEDS_DAVANT);
+  encendrePlomes(tiraDarrere, PLOMA_LEDS_DARRERE);
 }
 
 void loop() {

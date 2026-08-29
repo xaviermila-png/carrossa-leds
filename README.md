@@ -61,17 +61,19 @@ arduino-cli upload --fqbn arduino:avr:mega -p COMx dues-cares-un-arduino
 ## Mapa de LEDs per ploma
 
 Confirmat: les 8 plomes van totes **seguides** (sense cap LED apagat entre
-mig), en aquest ordre de colors, i les dues cares (davant/darrere) són
-**idèntiques**.
+mig), en aquest ordre de colors. Les dues cares (davant/darrere) **NO** es
+donen per simètriques — cada una té el seu propi array
+(`PLOMA_LEDS_DAVANT[]` / `PLOMA_LEDS_DARRERE[]`) a
+`dues-cares-un-arduino/dues-cares-un-arduino.ino`, així que poden acabar
+tenint un nombre de LEDs per ploma diferent sense cap problema.
 
 > **Pendent de confirmar** — el nombre de LEDs de cada ploma és
 > *placeholder* (9 a totes, el mateix que feia servir el programa
 > original) — no es coneix encara la mida real, i poden no ser totes
-> iguals. Per ajustar-ho: puja el programa, mira on cau realment el tall
-> entre cada color a la tira física, i corregeix els 8 números de
-> `PLOMA_LEDS[]` a `dues-cares-un-arduino/dues-cares-un-arduino.ino` (un
-> sol array, compartit per les dues cares mentre estiguin confirmades
-> idèntiques) fins que cada tall caigui just al final de la ploma
+> iguals ni entre plomes ni entre cares. Per ajustar-ho: puja el
+> programa, mira on cau realment el tall entre cada color a la tira
+> física, i corregeix els 8 números de l'array corresponent a la cara
+> que toqui fins que cada tall caigui just al final de la ploma
 > corresponent. Com que les plomes van seguides, no cal calcular índexs a
 > mà — cada ploma comença just on acaba l'anterior.
 
