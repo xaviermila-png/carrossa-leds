@@ -54,26 +54,28 @@ mateixos passos per `cara-darrere`).
 
 ## Mapa de LEDs per ploma
 
-> **Pendent de confirmar** — els trams `[inici, fi]` de cada ploma són
-> *placeholder*, extrets directament dels índexs que feia servir el
-> programa original (8 plomes de 9 LEDs, amb 1 LED de buit entre ploma i
-> ploma), NO són mesures reals. Cal confirmar/ajustar:
-> - Nombre exacte de LEDs de cada ploma (poden no ser tots iguals).
-> - Si hi ha algun LED apagat entre ploma i ploma, o van totes seguides.
-> - Si l'ordre físic del cablejat coincideix amb aquest ordre de colors.
-> - Si les dues cares (davant/darrere) fan servir els mateixos 8
->   colors/ordre — de moment són idèntics als dos sketches.
+Confirmat: les 8 plomes van totes **seguides** (sense cap LED apagat entre
+mig), en aquest ordre de colors, i les dues cares (davant/darrere) són
+**idèntiques**.
 
-| Ploma | LEDs (índex) | Color |
+> **Pendent de confirmar** — el nombre de LEDs de cada ploma és
+> *placeholder* (9 a totes, el mateix que feia servir el programa
+> original) — no es coneix encara la mida real, i poden no ser totes
+> iguals. Per ajustar-ho: puja el programa, mira on cau realment el tall
+> entre cada color a la tira física, i corregeix els 8 números de
+> `PLOMA_LEDS[]` a `cara-davant/cara-davant.ino` (i el mateix a
+> `cara-darrere/cara-darrere.ino`, són idèntics) fins que cada tall
+> caigui just al final de la ploma corresponent. Com que les plomes van
+> seguides, no cal calcular índexs a mà — cada ploma comença just on
+> acaba l'anterior.
+
+| Ploma | LEDs | Color |
 |---|---|---|
-| 1 | 0–8 | Groc |
-| 2 | 10–18 | Taronja |
-| 3 | 20–28 | Vermell |
-| 4 | 30–38 | Magenta (lila1) |
-| 5 | 40–48 | Verd |
-| 6 | 50–58 | Blau clar |
-| 7 | 60–68 | Blau fosc |
-| 8 | 70–78 | Indi (lila2) |
-
-Per ajustar-ho, edita l'array `PLOMES[]` a `cara-davant/cara-davant.ino` /
-`cara-darrere/cara-darrere.ino`.
+| 1 | 9 (placeholder) | Groc |
+| 2 | 9 (placeholder) | Taronja |
+| 3 | 9 (placeholder) | Vermell |
+| 4 | 9 (placeholder) | Magenta (lila1) |
+| 5 | 9 (placeholder) | Verd |
+| 6 | 9 (placeholder) | Blau clar |
+| 7 | 9 (placeholder) | Blau fosc |
+| 8 | 9 (placeholder) | Indi (lila2) |

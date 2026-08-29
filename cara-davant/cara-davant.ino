@@ -8,16 +8,17 @@
   (substitueix Control_de_Tires_de_LED_LOGO_01.ino, a ../reference/, que
   tenia diversos bugs — vegeu el README).
 
-  *** VALORS PENDENTS DE CONFIRMAR (marcats PLACEHOLDER més avall) ***
-  Els trams [inici, fi] de cada ploma s'han extret dels índexs que feia
-  servir el programa original, NO són mesures reals confirmades:
-    - Nombre exacte de LEDs de cada ploma (poden no ser tots iguals).
-    - Si hi ha LEDs apagats entre ploma i ploma, o van totes seguides
-      (l'original tenia un buit d'1 LED entre plomes — es manté aquí).
-    - Si l'ordre físic del cablejat coincideix amb l'ordre de colors de
-      l'original.
-    - Si aquesta cara (davant) fa servir els mateixos 8 colors/ordre que
-      la de darrere — de moment són idèntics als dos fitxers.
+  Confirmat per l'usuari: les 8 plomes van totes SEGUIDES (sense cap LED
+  apagat entre mig), en el mateix ordre que la llista de colors més avall,
+  i el sketch de la cara de darrere és idèntic a aquest.
+
+  *** ÚNIC VALOR PENDENT DE CONFIRMAR: PLOMA_LEDS més avall ***
+  No es coneix encara el nombre exacte de LEDs de cada ploma — de moment
+  totes 9 (placeholder, el mateix que feia servir el programa original).
+  Per ajustar-ho: puja el programa, mira on cau realment el tall entre
+  cada color a la tira física, i corregeix els 8 números de PLOMA_LEDS[]
+  (poden ser diferents entre plomes) fins que cada tall caigui just al
+  final de la ploma corresponent — no cal tocar res més del fitxer.
 */
 
 #include <Adafruit_NeoPixel.h>
@@ -31,8 +32,9 @@ constexpr uint16_t NUM_LEDS = 240;
 
 Adafruit_NeoPixel pixels(NUM_LEDS, PIN_DADES, NEO_GRB + NEO_KHZ800);
 
-// Colors del logo — definits un sol cop (l'original els recalculava a
-// cada volta del loop(), inútilment, ja que mai canviaven).
+// Colors del logo, en l'ordre físic de les plomes — definits un sol cop
+// (l'original els recalculava a cada volta del loop(), inútilment, ja
+// que mai canviaven).
 const uint32_t COLOR_GROC = pixels.Color(255, 215, 0);
 const uint32_t COLOR_TARONJA = pixels.Color(255, 70, 0);
 const uint32_t COLOR_VERMELL = pixels.Color(255, 0, 0);
@@ -42,34 +44,27 @@ const uint32_t COLOR_BLAU_CLAR = pixels.Color(0, 191, 255);
 const uint32_t COLOR_BLAU_FOSC = pixels.Color(0, 0, 139);
 const uint32_t COLOR_INDI = pixels.Color(75, 0, 130);    // "lila2" al programa original
 
-struct Ploma {
-  uint16_t inici;  // primer índex de LED (inclòs)
-  uint16_t fi;     // darrer índex de LED (inclòs)
-  uint32_t color;
+constexpr uint8_t NUM_PLOMES = 8;
+
+const uint32_t PLOMA_COLOR[NUM_PLOMES] = {
+    COLOR_GROC, COLOR_TARONJA, COLOR_VERMELL, COLOR_MAGENTA,
+    COLOR_VERD, COLOR_BLAU_CLAR, COLOR_BLAU_FOSC, COLOR_INDI,
 };
 
-// PLACEHOLDER: 8 plomes de 9 LEDs cadascuna, amb 1 LED de buit entre
-// ploma i ploma — exactament els trams que feia servir el programa
-// original. Ajustar amb els valors reals un cop confirmats.
-const Ploma PLOMES[] = {
-    {0, 8, COLOR_GROC},
-    {10, 18, COLOR_TARONJA},
-    {20, 28, COLOR_VERMELL},
-    {30, 38, COLOR_MAGENTA},
-    {40, 48, COLOR_VERD},
-    {50, 58, COLOR_BLAU_CLAR},
-    {60, 68, COLOR_BLAU_FOSC},
-    {70, 78, COLOR_INDI},
-};
-constexpr uint8_t NUM_PLOMES = sizeof(PLOMES) / sizeof(PLOMES[0]);
+// PLACEHOLDER — vegeu la nota de capçalera del fitxer.
+const uint16_t PLOMA_LEDS[NUM_PLOMES] = {9, 9, 9, 9, 9, 9, 9, 9};
 
 void setup() {
   pixels.begin();
   pixels.clear();
 
+  // Les plomes van seguides: el LED on comença la ploma p és la suma dels
+  // LEDs de totes les plomes anteriors.
+  uint16_t idx = 0;
   for (uint8_t p = 0; p < NUM_PLOMES; p++) {
-    for (uint16_t i = PLOMES[p].inici; i <= PLOMES[p].fi; i++) {
-      pixels.setPixelColor(i, PLOMES[p].color);
+    for (uint16_t n = 0; n < PLOMA_LEDS[p]; n++) {
+      pixels.setPixelColor(idx, PLOMA_COLOR[p]);
+      idx++;
     }
   }
   pixels.show();
