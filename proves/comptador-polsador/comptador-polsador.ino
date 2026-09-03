@@ -62,9 +62,6 @@ void mostrarComptador() {
   lcd.print("LED actual: ");
   lcd.print(ledActual + 1);
   lcd.print("    ");  // sobreescriu restes de xifres més llargues
-  lcd.setCursor(0, 2);
-  lcd.print("Total tira: ");
-  lcd.print(NUM_LEDS);
   lcd.setCursor(0, 3);
   lcd.print("Prem per avancar");
 }
