@@ -15,7 +15,10 @@
   els 8 LEDs físics d'aquella fila, cosa que ja passa amb la numeració
   habitual (fila 0 = índexs 0-7, fila 1 = índexs 8-15, etc.).
 
-  Programa ESTÀTIC (setup() ho encén tot i prou), com el programa final.
+  Revela el logo fila a fila (cada ploma s'encén i es queda encesa, no
+  es torna a apagar): comença en negre, va encenent files en ordre amb
+  una pausa entre cada una, es queda amb el logo complet una estona, i
+  torna a començar — en bucle, per poder-ho observar repetidament.
 */
 
 #include <Adafruit_NeoPixel.h>
@@ -43,18 +46,24 @@ const uint32_t PLOMA_COLOR[NUM_PLOMES] = {
     COLOR_VERD, COLOR_BLAU_CLAR, COLOR_BLAU_FOSC, COLOR_INDI,
 };
 
+constexpr uint16_t RETARD_FILA_MS = 400;      // pausa entre l'encesa de cada fila
+constexpr uint16_t RETARD_COMPLET_MS = 2000;  // estona amb el logo complet abans de repetir
+
 void setup() {
   pixels.begin();
+}
+
+void loop() {
   pixels.clear();
+  pixels.show();
 
   for (uint8_t fila = 0; fila < FILES; fila++) {
     for (uint8_t col = 0; col < COLUMNES; col++) {
       pixels.setPixelColor(fila * COLUMNES + col, PLOMA_COLOR[fila]);
     }
+    pixels.show();
+    delay(RETARD_FILA_MS);
   }
-  pixels.show();
-}
 
-void loop() {
-  // Simulació estàtica: no cal fer res aquí.
+  delay(RETARD_COMPLET_MS);
 }
