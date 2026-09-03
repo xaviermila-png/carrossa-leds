@@ -73,6 +73,17 @@ void setup() {
   pixels.begin();
   pinMode(PIN_POLSADOR, INPUT_PULLUP);
 
+  // Marge abans de parlar amb el mòdul I2C de la pantalla — confirmat en
+  // maquinari real que alguns d'aquests mòduls encara no estan del tot
+  // assentats just després d'alimentar-se, i la seqüència d'inicialització
+  // (molt sensible als temps, en mode 4 bits) es perd en silenci, deixant
+  // la pantalla mostrant caràcters aleatoris per sempre fins a un
+  // reinici. init()+clear() doblat per si el primer intent no ha arribat
+  // a assentar-se del tot.
+  delay(500);
+  lcd.init();
+  delay(50);
+  lcd.clear();
   lcd.init();
   lcd.backlight();
 
