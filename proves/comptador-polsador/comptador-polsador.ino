@@ -27,7 +27,18 @@
 #include <Wire.h>
 
 constexpr uint8_t PIN_DADES = 2;
-constexpr uint16_t NUM_LEDS = 240;  // baixa-ho a 64 si proves amb la matriu 8x8
+// Un "sense límit" de veritat no és possible (l'Arduino Mega només té
+// 8 KB de RAM, i Adafruit_NeoPixel en reserva 3 bytes per LED per poder
+// arribar-hi amb el senyal) — però 1000 hi cap còmodament (3000 bytes,
+// deixant més de 5 KB lliures per a la resta del programa i la pantalla
+// LCD) i és molt més que qualsevol tira real d'aquest projecte, així que
+// mai tornarà a la volta abans d'arribar al final de veritat. Baixa-ho a
+// 64 si proves amb la matriu 8x8; si algun dia calgués encara més,
+// puja-ho amb marge (per exemple 2000 = 6000 bytes) i comprova que
+// segueix funcionant bé (símptoma de quedar-se sense RAM: la pantalla
+// LCD tornant a mostrar caràcters estranys, com el bug que ja vam
+// solucionar).
+constexpr uint16_t NUM_LEDS = 1000;
 
 constexpr uint8_t PIN_POLSADOR = 4;
 // Temps a esperar just després de detectar una pulsació abans de tornar
