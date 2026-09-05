@@ -27,18 +27,6 @@
 #include <Wire.h>
 
 constexpr uint8_t PIN_DADES = 2;
-// Un "sense límit" de veritat no és possible (l'Arduino Mega només té
-// 8 KB de RAM, i Adafruit_NeoPixel en reserva 3 bytes per LED per poder
-// arribar-hi amb el senyal) — però 1000 hi cap còmodament (3000 bytes,
-// deixant més de 5 KB lliures per a la resta del programa i la pantalla
-// LCD) i és molt més que qualsevol tira real d'aquest projecte, així que
-// mai tornarà a la volta abans d'arribar al final de veritat. Baixa-ho a
-// 64 si proves amb la matriu 8x8; si algun dia calgués encara més,
-// puja-ho amb marge (per exemple 2000 = 6000 bytes) i comprova que
-// segueix funcionant bé (símptoma de quedar-se sense RAM: la pantalla
-// LCD tornant a mostrar caràcters estranys, com el bug que ja vam
-// solucionar).
-constexpr uint16_t NUM_LEDS = 1000;
 
 constexpr uint8_t PIN_POLSADOR = 4;
 // Temps a esperar just després de detectar una pulsació abans de tornar
@@ -52,7 +40,12 @@ constexpr uint8_t LCD_ADRECA = 0x27;
 constexpr uint8_t LCD_COLUMNES = 20;
 constexpr uint8_t LCD_FILES = 4;
 
-Adafruit_NeoPixel pixels(NUM_LEDS, PIN_DADES, NEO_GRB + NEO_KHZ800);
+// Es comença amb longitud 1 i es fa créixer amb updateLength() cada cop
+// que cal arribar a un LED nou — així no cal declarar per endavant cap
+// nombre màxim de LEDs (l'anterior versió es reiniciava als 240 perquè
+// la tira real en té més). L'única memòria que es fa servir en cada
+// moment és la necessària per arribar al LED actual, no un màxim fixat.
+Adafruit_NeoPixel pixels(1, PIN_DADES, NEO_GRB + NEO_KHZ800);
 LiquidCrystal_I2C lcd(LCD_ADRECA, LCD_COLUMNES, LCD_FILES);
 
 const uint32_t COLOR_COMPTADOR = pixels.Color(255, 255, 255);  // blanc
@@ -61,6 +54,13 @@ uint16_t ledActual = 0;         // índex 0-based del LED encès ara mateix
 bool polsadorAnterior = HIGH;   // HIGH = no premut (pull-up)
 
 void encendreLed(uint16_t index) {
+  // updateLength() allibera el buffer anterior i en reserva un de nou
+  // exactament de la mida necessària per arribar a "index" — creix (o
+  // decreix) sol segons calgui, sense cap límit fixat de VERITAT més
+  // enllà del que un uint16_t pot comptar (fins a 65535) i de la RAM
+  // real del Mega (8 KB — a 3 bytes/LED, no es notaria fins molt més
+  // enllà de qualsevol tira real d'aquest projecte).
+  pixels.updateLength(index + 1);
   pixels.clear();
   pixels.setPixelColor(index, COLOR_COMPTADOR);
   pixels.show();
@@ -109,7 +109,7 @@ void loop() {
   if (polsadorAnterior == HIGH && polsadorActual == LOW) {
     delay(RETARD_REBOT_MS);
     if (digitalRead(PIN_POLSADOR) == LOW) {
-      ledActual = (ledActual + 1) % NUM_LEDS;
+      ledActual++;  // sense mòdul: no torna a zero, segueix comptant sempre endavant
       encendreLed(ledActual);
       mostrarComptador();
     }
