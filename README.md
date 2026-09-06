@@ -9,8 +9,8 @@ il·luminada d'un color fix, sense efectes ni animacions ni cap botó físic.
 
 ## Maquinari
 - 2x Arduino Mega 2560 — un per cada cara de la carrossa.
-- Cada Arduino controla la seva pròpia tira NeoPixel independent (240 LEDs
-  declarats, `NUM_LEDS`).
+- Cada Arduino controla la seva pròpia tira NeoPixel independent: 853 LEDs
+  a la Cara A (davant), 868 LEDs a la Cara B (darrere).
 - Pin de dades: GPIO 2 a totes dues plaques.
 
 ## Estructura del projecte
@@ -52,33 +52,46 @@ arduino-cli upload --fqbn arduino:avr:mega -p COMx cara-davant
 (substitueix `COMx` pel port real — `arduino-cli board list` per confirmar-lo;
 mateixos passos per `cara-darrere`).
 
-## Mapa de LEDs per ploma
+## Mapa de LEDs per ala
 
-Confirmat: les 8 plomes van totes **seguides** (sense cap LED apagat entre
-mig), en aquest ordre de colors. Les dues cares (davant/darrere) **NO** es
-donen per simètriques — cada sketch té el seu propi `PLOMA_LEDS[]`
-independent, així que poden acabar tenint un nombre de LEDs per ploma
-diferent sense cap problema.
+Confirmat físicament amb ../proves/comptador-polsador/,
+../proves/verificador-ales/ i ../proves/verificador-cares/. Les dues cares
+(davant/darrere) **NO** són simètriques — cada sketch té el seu propi
+`RANGS[]`/`SOLTS[]` independent, amb un nombre de LEDs per ala diferent.
 
-> **Pendent de confirmar** — el nombre de LEDs de cada ploma és
-> *placeholder* (9 a totes, el mateix que feia servir el programa
-> original) — no es coneix encara la mida real, i poden no ser totes
-> iguals ni entre plomes ni entre cares. Per ajustar-ho: puja el
-> programa, mira on cau realment el tall entre cada color a la tira
-> física, i corregeix els 8 números de `PLOMA_LEDS[]` de la cara
-> corresponent (`cara-davant/cara-davant.ino` o
-> `cara-darrere/cara-darrere.ino`, cadascun per separat) fins que cada
-> tall caigui just al final de la ploma corresponent. Com que les plomes
-> van seguides, no cal calcular índexs a mà — cada ploma comença just on
-> acaba l'anterior.
+Posició física de les ales (igual a totes dues cares): l'ala 1 és baix a
+l'esquerra, pujant fins a l'ala 4 a dalt a l'esquerra; l'ala 5 és dalt a
+la dreta, baixant fins a l'ala 8 a baix a la dreta. Els colors seguixen
+aquest mateix recorregut (càlids a l'esquerra, freds a la dreta,
+trobant-se en violeta/indi a dalt de tot), tal com es veu al logo.
 
-| Ploma | LEDs | Color |
-|---|---|---|
-| 1 | 9 (placeholder) | Groc |
-| 2 | 9 (placeholder) | Taronja |
-| 3 | 9 (placeholder) | Vermell |
-| 4 | 9 (placeholder) | Magenta (lila1) |
-| 5 | 9 (placeholder) | Verd |
-| 6 | 9 (placeholder) | Blau clar |
-| 7 | 9 (placeholder) | Blau fosc |
-| 8 | 9 (placeholder) | Indi (lila2) |
+La majoria de LEDs de cada ala van **seguits** (rang principal), però
+alguns LEDs "solts" —al mig del rang d'una altra ala— en realitat
+il·luminen una ala diferent de la que els tocaria pel seu número; són
+efecte del cablejat físic real, no un error de comptatge.
+
+**Cara A** (`cara-davant/cara-davant.ino`, 853 LEDs):
+
+| Ala | Color | Rang principal | Solts |
+|---|---|---|---|
+| 1 | Groc | 1 – 105 | — |
+| 2 | Taronja | 106 – 210 | 418, 419 |
+| 3 | Vermell | 211 – 312 | 413 – 417 |
+| 4 | Violeta | 313 – 412 | — |
+| 5 | Indi | 424 – 528 | — |
+| 6 | Blau fosc | 529 – 638 | 423 |
+| 7 | Blau clar | 639 – 745 | 420 – 422 |
+| 8 | Verd | 746 – 853 | — |
+
+**Cara B** (`cara-darrere/cara-darrere.ino`, 868 LEDs):
+
+| Ala | Color | Rang principal | Solts |
+|---|---|---|---|
+| 1 | Groc | 1 – 110 | — |
+| 2 | Taronja | 111 – 216 | 438, 439 |
+| 3 | Vermell | 217 – 327 | 437 |
+| 4 | Violeta | 328 – 436 | — |
+| 5 | Indi | 440 – 543 | — |
+| 6 | Blau fosc | 544 – 647 | — |
+| 7 | Blau clar | 648 – 754 | — |
+| 8 | Verd | 755 – 868 | — |

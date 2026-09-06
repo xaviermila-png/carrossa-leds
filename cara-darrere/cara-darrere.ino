@@ -1,79 +1,122 @@
 /*
-  carrossa-leds — Cara DARRERE
-  Il·luminació estàtica del logo de l'associació "INDEPENDENTS" (Carnaval
-  de Sitges) amb una tira de LEDs digitals WS2812B/NeoPixel.
+  carrossa-leds — Cara DARRERE (Cara B)
+  Programa FINAL per a l'Arduino Mega que controla la tira de LEDs
+  WS2812B/NeoPixel de la cara de darrere del logo de l'associació
+  "INDEPENDENTS" (Carnaval de Sitges).
 
-  Programa ESTÀTIC: setup() encén les 8 plomes del logo, cadascuna amb un
-  color fix, i loop() es queda buit — no hi ha cap efecte ni commutació
-  (substitueix Control_de_Tires_de_LED_LOGO_01.ino, a ../reference/, que
-  tenia diversos bugs — vegeu el README).
+  És un programa ESTÀTIC: el setup() encén les 8 ales del logo, cadascuna
+  amb un color fix, i el loop() no fa res — no hi ha animacions ni
+  polsadors, la carrossa només s'ha d'encendre un cop i quedar-se així.
 
-  Confirmat per l'usuari: les 8 plomes van totes SEGUIDES (sense cap LED
-  apagat entre mig), en el mateix ordre que la llista de colors més avall.
-  Aquest sketch parteix del mateix disseny que el de la cara del davant,
-  però és un fitxer independent — les dues cares NO es donen per
-  simètriques (poden tenir un nombre de LEDs per ploma diferent), així
-  que cadascuna té el seu propi PLOMA_LEDS[] i es pot ajustar sense
-  afectar l'altra.
-
-  *** ÚNIC VALOR PENDENT DE CONFIRMAR: PLOMA_LEDS més avall ***
-  No es coneix encara el nombre exacte de LEDs de cada ploma — de moment
-  totes 9 (placeholder, el mateix que feia servir el programa original).
-  Per ajustar-ho: puja el programa, mira on cau realment el tall entre
-  cada color a la tira física, i corregeix els 8 números de PLOMA_LEDS[]
-  (poden ser diferents entre plomes) fins que cada tall caigui just al
-  final de la ploma corresponent — no cal tocar res més del fitxer.
+  Dades (rangs de LED, LEDs solts i colors definitius) confirmades per
+  l'usuari provant amb els sketches de ../proves/verificador-ales/ i
+  ../proves/verificador-cares/ — vegeu-los si cal repetir alguna prova.
+  La Cara B NO es dona per simètrica a la Cara A: té el seu propi nombre
+  de LEDs per ala (fitxer independent, vegeu ../cara-davant/).
 */
 
 #include <Adafruit_NeoPixel.h>
 
-// Pin de dades net — l'original feia servir el mateix pin 2 per la tira
-// I per un botó fantasma (mai declarat) que ja no existeix en aquest
-// programa; sense aquell conflicte, el pin 2 torna a ser vàlid tal com
-// ja estava cablejat.
+// Pin de dades de la tira. Un únic pin: aquest Arduino només controla la
+// tira de la Cara B (l'altra cara té el seu propi Arduino Mega, vegeu
+// ../cara-davant/).
 constexpr uint8_t PIN_DADES = 2;
-constexpr uint16_t NUM_LEDS = 240;
+
+// Nombre total de LEDs de la tira d'aquesta cara: el LED més alt que fem
+// servir és el final de l'ala 8 (vegeu RANGS més avall). No hi ha cap
+// límit "de mentida" imposat aquí — és el nombre real confirmat físicament
+// (868, no 866: l'ala 8 es va allargar dos LEDs més després de la primera
+// prova).
+constexpr uint16_t NUM_LEDS = 868;
 
 Adafruit_NeoPixel pixels(NUM_LEDS, PIN_DADES, NEO_GRB + NEO_KHZ800);
 
-// Colors del logo, en l'ordre físic de les plomes — definits un sol cop
-// (l'original els recalculava a cada volta del loop(), inútilment, ja
-// que mai canviaven).
-const uint32_t COLOR_GROC = pixels.Color(255, 215, 0);
-const uint32_t COLOR_TARONJA = pixels.Color(255, 70, 0);
-const uint32_t COLOR_VERMELL = pixels.Color(255, 0, 0);
-const uint32_t COLOR_MAGENTA = pixels.Color(250, 0, 250);    // "lila1" al programa original
-const uint32_t COLOR_VERD = pixels.Color(0, 255, 0);
-const uint32_t COLOR_BLAU_CLAR = pixels.Color(0, 191, 255);
-const uint32_t COLOR_BLAU_FOSC = pixels.Color(0, 0, 139);
-const uint32_t COLOR_INDI = pixels.Color(75, 0, 130);    // "lila2" al programa original
+constexpr uint8_t NUM_ALES = 8;
 
-constexpr uint8_t NUM_PLOMES = 8;
-
-const uint32_t PLOMA_COLOR[NUM_PLOMES] = {
-    COLOR_GROC, COLOR_TARONJA, COLOR_VERMELL, COLOR_MAGENTA,
-    COLOR_VERD, COLOR_BLAU_CLAR, COLOR_BLAU_FOSC, COLOR_INDI,
+// Colors finals de cada ala (índex 0 = ala 1, ... índex 7 = ala 8),
+// ajustats a ull sobre la tira real perquè cap parella d'ales veïnes es
+// confongui. Segueixen l'ordre físic del logo: pugen en tons càlids pel
+// costat esquerre (ala 1 groc, baix, fins a l'ala 4 violeta, dalt) i
+// baixen en tons freds pel costat dret (ala 5 indi, dalt, fins a l'ala 8
+// verd, baix) — violeta i indi es toquen a dalt de tot, tal com es veu a
+// les plomes del logo. Mateixos colors que ../cara-davant/ perquè les
+// dues cares es vegin com un únic disseny.
+const uint32_t PLOMA_COLOR[NUM_ALES] = {
+    pixels.Color(255, 215, 0),   // 1 Groc      — baix esquerra
+    pixels.Color(255, 70, 0),    // 2 Taronja
+    pixels.Color(255, 0, 0),     // 3 Vermell
+    pixels.Color(40, 10, 255),   // 4 Violeta   — dalt esquerra
+    pixels.Color(25, 0, 255),    // 5 Indi      — dalt dreta
+    pixels.Color(0, 0, 139),     // 6 Blau fosc
+    pixels.Color(0, 191, 255),   // 7 Blau clar
+    pixels.Color(0, 255, 0),     // 8 Verd      — baix dreta
 };
 
-// PLACEHOLDER — vegeu la nota de capçalera del fitxer.
-const uint16_t PLOMA_LEDS[NUM_PLOMES] = {9, 9, 9, 9, 9, 9, 9, 9};
+// Un rang de LEDs "seqüencial": del primer al darrer LED d'una ala,
+// comptats tal com surten un darrere l'altre a la tira física.
+struct Rang {
+  uint16_t inici;  // número de LED 1-based (el primer LED de la tira és l'1, no el 0)
+  uint16_t fi;
+};
+
+// Rang principal de cada ala de la Cara B, índex [ala - 1]. Confirmat a
+// mà, ala per ala, amb ../proves/comptador-polsador/.
+const Rang RANGS[NUM_ALES] = {
+    {1, 110},    // ala 1
+    {111, 216},  // ala 2
+    {217, 327},  // ala 3
+    {328, 436},  // ala 4
+    {440, 543},  // ala 5
+    {544, 647},  // ala 6
+    {648, 754},  // ala 7
+    {755, 868},  // ala 8
+};
+
+// Un LED "solt": dona llum a una ala diferent de la que li tocaria pel
+// seu número (per exemple, per com passa el cablejat físicament entre
+// dues ales veïnes). S'encén amb el color de "ala", no amb el de l'ala on
+// li tocaria pel seu número de LED.
+struct Solt {
+  uint8_t ala;   // 1-based — l'ala a la qual pertany de veritat
+  uint16_t led;  // 1-based — número de LED a la tira
+};
+
+// LEDs solts de la Cara B: cauen al buit entre el final de l'ala 4 (436)
+// i el començament de l'ala 5 (440), però no pertanyen a cap d'aquestes
+// dues ales.
+const Solt SOLTS[] = {
+    {3, 437},          // pertany a l'ala 3
+    {2, 438}, {2, 439},  // pertanyen a l'ala 2
+};
+constexpr uint8_t NUM_SOLTS = sizeof(SOLTS) / sizeof(SOLTS[0]);
 
 void setup() {
-  pixels.begin();
-  pixels.clear();
+  pixels.begin();  // inicialitza la llibreria i reserva el buffer intern per als NUM_LEDS declarats
+  pixels.clear();  // tots els LEDs apagats (negre) fins que els encenem explícitament
 
-  // Les plomes van seguides: el LED on comença la ploma p és la suma dels
-  // LEDs de totes les plomes anteriors.
-  uint16_t idx = 0;
-  for (uint8_t p = 0; p < NUM_PLOMES; p++) {
-    for (uint16_t n = 0; n < PLOMA_LEDS[p]; n++) {
-      pixels.setPixelColor(idx, PLOMA_COLOR[p]);
-      idx++;
+  // Recorre les 8 ales; per cadascuna, pinta tots els LEDs del seu rang
+  // principal amb el color que li toca. Els números de LED que fem
+  // servir a RANGS són 1-based (el primer LED físic és l'1), però
+  // setPixelColor() de la llibreria espera un índex 0-based (el primer
+  // LED és el 0) — per això sempre restem 1.
+  for (uint8_t ala = 0; ala < NUM_ALES; ala++) {
+    const Rang &r = RANGS[ala];
+    for (uint16_t led = r.inici; led <= r.fi; led++) {
+      pixels.setPixelColor(led - 1, PLOMA_COLOR[ala]);
     }
   }
-  pixels.show();
+
+  // Un cop pintats tots els rangs principals, sobreescrivim els LEDs
+  // solts amb el color de l'ala a la qual pertanyen de veritat (no la
+  // seva posició numèrica).
+  for (uint8_t i = 0; i < NUM_SOLTS; i++) {
+    pixels.setPixelColor(SOLTS[i].led - 1, PLOMA_COLOR[SOLTS[i].ala - 1]);
+  }
+
+  pixels.show();  // envia tot el buffer a la tira — fins aquí no s'encén cap LED de veritat
 }
 
 void loop() {
-  // Programa estàtic: no cal fer res aquí.
+  // Programa estàtic: un cop encesa la carrossa a setup(), no cal fer
+  // res més — sense animacions ni polsadors.
 }
