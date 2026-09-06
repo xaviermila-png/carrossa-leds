@@ -34,7 +34,7 @@ Adafruit_NeoPixel pixels(NUM_LEDS, PIN_DADES, NEO_GRB + NEO_KHZ800);
 const uint32_t COLOR_GROC = pixels.Color(255, 215, 0);
 const uint32_t COLOR_TARONJA = pixels.Color(255, 70, 0);
 const uint32_t COLOR_VERMELL = pixels.Color(255, 0, 0);
-const uint32_t COLOR_MAGENTA = pixels.Color(250, 0, 250);    // "lila1" al programa original
+const uint32_t COLOR_VIOLETA = pixels.Color(60, 0, 220);    // "lila1" al programa original — abans magenta, massa semblant al vermell
 const uint32_t COLOR_VERD = pixels.Color(0, 255, 0);
 const uint32_t COLOR_BLAU_CLAR = pixels.Color(0, 191, 255);
 const uint32_t COLOR_BLAU_FOSC = pixels.Color(0, 0, 139);
@@ -42,8 +42,8 @@ const uint32_t COLOR_INDI = pixels.Color(75, 0, 130);    // "lila2" al programa 
 
 constexpr uint8_t NUM_PLOMES = 8;
 const uint32_t PLOMA_COLOR[NUM_PLOMES] = {
-    COLOR_GROC, COLOR_TARONJA, COLOR_VERMELL, COLOR_MAGENTA,
-    COLOR_VERD, COLOR_BLAU_CLAR, COLOR_BLAU_FOSC, COLOR_INDI,
+    COLOR_GROC, COLOR_TARONJA, COLOR_VERMELL, COLOR_VIOLETA,
+    COLOR_INDI, COLOR_BLAU_FOSC, COLOR_BLAU_CLAR, COLOR_VERD,
 };
 
 constexpr uint16_t RETARD_FILA_MS = 400;      // pausa entre l'encesa de cada fila
