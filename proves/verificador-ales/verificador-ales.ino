@@ -11,14 +11,14 @@
   Seqüència de pulsacions (es repeteix en cicle):
     Cara A ala 1, ala 2, ..., ala 8, Cara B ala 1, ala 2, ..., ala 8, i
     torna a Cara A ala 1. Només hi ha UNA tira connectada cada vegada
-    (sempre al pin 2): en acabar les 8 ales de la Cara A, l'usuari
+    (sempre al pin 5): en acabar les 8 ales de la Cara A, l'usuari
     desconnecta aquella tira i connecta la de la Cara B abans de seguir
     prement — el programa no distingeix quina tira hi ha físicament
     connectada, només compta pulsacions.
 
   *** SUPOSICIONS A CONFIRMAR — canvia-les si no encaixen ***
-  - Pin de dades sempre el 2 (mateix pin que fan servir cara-davant.ino i
-    cara-darrere.ino al programa final).
+  - Pin de dades sempre el 5 (mateix pin que fan servir cara-davant.ino i
+    cara-darrere.ino al programa final — corregit del 2 original).
   - Pantalla LCD 4 línies I2C (adreça 0x27, vegeu LCD_ADRECA si surt en
     blanc) — mateix maquinari que ../comptador-polsador/.
   - Polsador entre PIN_POLSADOR i GND, sense resistència externa (pull-up
@@ -35,7 +35,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 
-constexpr uint8_t PIN_DADES = 2;
+constexpr uint8_t PIN_DADES = 5;  // corregit de 2 a 5 — pin real del cablejat
 
 constexpr uint8_t PIN_POLSADOR = 4;
 constexpr unsigned long RETARD_REBOT_MS = 40;

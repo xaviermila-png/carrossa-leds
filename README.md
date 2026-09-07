@@ -11,7 +11,8 @@ il·luminada d'un color fix, sense efectes ni animacions ni cap botó físic.
 - 2x Arduino Mega 2560 — un per cada cara de la carrossa.
 - Cada Arduino controla la seva pròpia tira NeoPixel independent: 853 LEDs
   a la Cara A (davant), 868 LEDs a la Cara B (darrere).
-- Pin de dades: GPIO 2 a totes dues plaques.
+- Pin de dades: GPIO 5 a totes dues plaques (corregit del GPIO 2 inicial,
+  que no era el pin real del cablejat).
 
 ## Estructura del projecte
 - [`cara-davant/`](cara-davant/) — sketch per a l'Arduino de la cara del

@@ -14,7 +14,8 @@
   - Polsador connectat entre el pin PIN_POLSADOR i GND, sense cap
     resistència externa (es fa servir la resistència de pull-up interna
     de l'Arduino) — en repòs llegeix HIGH, en prémer llegeix LOW.
-  - Tira NeoPixel al pin de dades habitual del projecte (pin 2).
+  - Tira NeoPixel al pin de dades habitual del projecte (pin 5, corregit
+    del 2 original).
 
   Consum: mai hi ha més d'un LED encès alhora, així que no cal
   alimentació externa per aquesta prova concreta (a diferència de la
@@ -26,7 +27,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 
-constexpr uint8_t PIN_DADES = 2;
+constexpr uint8_t PIN_DADES = 5;  // corregit de 2 a 5 — pin real del cablejat
 
 constexpr uint8_t PIN_POLSADOR = 4;
 // Temps a esperar just després de detectar una pulsació abans de tornar

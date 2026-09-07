@@ -5,7 +5,7 @@
   una ploma, encesa amb el mateix color que li correspon al programa
   real (cara-davant/cara-darrere a `main`).
 
-  Pin de control: GPIO 2 — el mateix pin de dades que ja fa servir la
+  Pin de control: GPIO 5 — el mateix pin de dades que ja fa servir la
   resta del projecte.
 
   Nota sobre el cablejat de la matriu (serpentina o no): com que cada
@@ -23,7 +23,7 @@
 
 #include <Adafruit_NeoPixel.h>
 
-constexpr uint8_t PIN_DADES = 2;
+constexpr uint8_t PIN_DADES = 5;  // corregit de 2 a 5 — pin real del cablejat
 constexpr uint8_t COLUMNES = 8;
 constexpr uint8_t FILES = 8;
 constexpr uint16_t NUM_LEDS = COLUMNES * FILES;  // matriu 8x8

@@ -11,7 +11,8 @@
   ../verificador-ales/ (mateixa font de veritat, cap dada duplicada a mà).
 
   *** SUPOSICIONS A CONFIRMAR — canvia-les si no encaixen ***
-  - Pin de dades sempre el 2 (mateix pin que cara-davant.ino / cara-darrere.ino).
+  - Pin de dades sempre el 5 (mateix pin que cara-davant.ino / cara-darrere.ino
+    — corregit del 2 original).
   - Pantalla LCD 4 línies I2C (adreça 0x27) — mateix maquinari que
     ../comptador-polsador/ i ../verificador-ales/.
   - Polsador entre PIN_POLSADOR i GND, pull-up intern — igual que als
@@ -22,7 +23,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 
-constexpr uint8_t PIN_DADES = 2;
+constexpr uint8_t PIN_DADES = 5;  // corregit de 2 a 5 — pin real del cablejat
 
 constexpr uint8_t PIN_POLSADOR = 4;
 constexpr unsigned long RETARD_REBOT_MS = 40;

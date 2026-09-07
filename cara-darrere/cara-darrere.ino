@@ -19,8 +19,10 @@
 
 // Pin de dades de la tira. Un únic pin: aquest Arduino només controla la
 // tira de la Cara B (l'altra cara té el seu propi Arduino Mega, vegeu
-// ../cara-davant/).
-constexpr uint8_t PIN_DADES = 2;
+// ../cara-davant/). Corregit de 2 a 5 — el cablejat real de la carrossa
+// fa servir el pin 5, no el 2 (que era el pin habitual d'altres projectes
+// NeoPixel, però no d'aquest).
+constexpr uint8_t PIN_DADES = 5;
 
 // Nombre total de LEDs de la tira d'aquesta cara: el LED més alt que fem
 // servir és el final de l'ala 8 (vegeu RANGS més avall). No hi ha cap
